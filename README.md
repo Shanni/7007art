@@ -1,66 +1,43 @@
-## Foundry
+# AI Art NFT Contract
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A smart contract implementation for minting and managing AI-generated artwork as NFTs, following the ERC7007 standard for AI-generated content.
 
-Foundry consists of:
+## Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+AiArtNFT is an ERC721-compliant smart contract that allows for:
+- Minting NFTs with associated AI-generated artwork
+- Storing and verifying AI generation proofs
+- Managing artwork data and prompts on-chain
 
-## Documentation
+## Features
 
-https://book.getfoundry.sh/
+- ERC721 compliant NFT implementation
+- Implementation of IERC7007 interface for AI-generated content
+- Ownership management with OpenZeppelin's Ownable
+- Secure minting with proof verification
+- On-chain storage of AI generation data
+
+## Contract Functions
+
+### Core Functions
+
+- `mintAiArt(address to, bytes prompt, bytes artData, bytes proof)`: Mint new AI artwork NFTs
+- `addAigcData(uint256 tokenId, bytes prompt, bytes aigcData, bytes proof)`: Add or update AI generation data
+- `verify(bytes prompt, bytes aigcData, bytes proof)`: Verify AI generation proof
+- `getAiArtData(uint256 tokenId)`: Retrieve artwork data, prompts, and proofs
+
+### Data Storage
+
+The contract stores three key pieces of data for each token:
+- Prompts used for generation
+- AI-generated content data
+- Generation proofs
 
 ## Usage
 
-### Build
+1. Deploy the contract:
+2. Mint an NFT with a prompt
+3. Add AI-generated content data and proof
+4. Verify the data and proof
+5. Retrieve the data and proof for any token
 
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
