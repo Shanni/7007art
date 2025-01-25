@@ -3,7 +3,6 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
 interface IERC7007 {
     event AigcData(
@@ -28,15 +27,17 @@ interface IERC7007 {
 }
 
 contract AiArtNFT is ERC721, IERC7007, Ownable {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-
     // Mapping from token ID to its AIGC data
     mapping(uint256 => bytes) public prompts;
     mapping(uint256 => bytes) public aigcData;
     mapping(uint256 => bytes) public proofs;
 
-    constructor() ERC721("AI Generated Art", "AIART") {}
+    uint256 private _nextTokenId; // Track the next token ID
+
+    // Pass msg.sender (or _msgSender()) to Ownable constructor
+    constructor() ERC721("AI Generated Art", "AIART") Ownable(msg.sender) {
+        // Initialize anything else here if needed
+    }
 
     function mintAiArt(
         address to,
@@ -46,9 +47,9 @@ contract AiArtNFT is ERC721, IERC7007, Ownable {
     ) external onlyOwner returns (uint256) {
         require(verify(prompt, artData, proof), "Invalid AIGC proof");
 
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        
+        uint256 newTokenId = _nextTokenId;
+        _nextTokenId++; // Increment the next token ID
+
         _mint(to, newTokenId);
         addAigcData(newTokenId, prompt, artData, proof);
 
@@ -61,7 +62,7 @@ contract AiArtNFT is ERC721, IERC7007, Ownable {
         bytes calldata aigcData_,
         bytes calldata proof
     ) public override {
-        require(_exists(tokenId), "Token does not exist");
+        require(_exists(tokenId), "Token does not exist"); 
         require(ownerOf(tokenId) == msg.sender || msg.sender == owner(), "Not authorized");
 
         prompts[tokenId] = prompt;
@@ -77,16 +78,27 @@ contract AiArtNFT is ERC721, IERC7007, Ownable {
         bytes calldata proof
     ) public pure override returns (bool) {
         // Implement your verification logic here
-        // This could involve checking signatures, verifying with an oracle, etc.
-        return true; // Placeholder return
+        return true; // Placeholder
     }
 
-    function getAiArtData(uint256 tokenId) external view returns (
-        bytes memory prompt,
-        bytes memory artData,
-        bytes memory proof
-    ) {
+    function getAiArtData(uint256 tokenId) 
+        external 
+        view 
+        returns (
+            bytes memory promptData,
+            bytes memory artData,
+            bytes memory proofData
+        ) 
+    {
         require(_exists(tokenId), "Token does not exist");
         return (prompts[tokenId], aigcData[tokenId], proofs[tokenId]);
     }
-} 
+
+    /**
+     * @dev Returns whether `tokenId` exists.
+     * Tokens can be managed by their owner or approved accounts via {approve} or {setApprovalForAll}.
+     */
+    function _exists(uint256 tokenId) internal view virtual returns (bool) {
+        return _ownerOf(tokenId) != address(0);
+    }
+}
