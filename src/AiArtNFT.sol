@@ -26,7 +26,7 @@ interface IERC7007 {
     ) external view returns (bool success);
 }
 
-contract AiArtNFT is ERC721, IERC7007, Ownable {
+contract Humanoid7007 is ERC721, IERC7007, Ownable {
     // Mapping from token ID to its AIGC data
     mapping(uint256 => bytes) public prompts;
     mapping(uint256 => bytes) public aigcData;
@@ -35,7 +35,7 @@ contract AiArtNFT is ERC721, IERC7007, Ownable {
     uint256 private _nextTokenId; // Track the next token ID
 
     // Pass msg.sender (or _msgSender()) to Ownable constructor
-    constructor() ERC721("AI Generated Art", "AIART") Ownable(msg.sender) {
+    constructor() ERC721("Humanoid7007", "H7007") Ownable(msg.sender) {
         // Initialize anything else here if needed
     }
 

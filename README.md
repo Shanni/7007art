@@ -1,4 +1,4 @@
-# AI Art NFT Contract
+# Humanoid7007 Contract
 
 A smart contract implementation for minting and managing AI-generated artwork as NFTs, following the ERC7007 standard for AI-generated content.
 
